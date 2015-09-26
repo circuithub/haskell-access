@@ -1,0 +1,32 @@
+name:              access
+version:           0.1.0
+synopsis:          A simple representation for type-safe access control.
+description:       This package exposes a simple, type-safe scheme for specifying
+                   authorization requirements on resources.
+                   Contributions are most welcome.
+homepage:          https://github.com/circuithub/comparable-key
+bug-reports:       https://github.com/circuithub/comparable-key/issues
+license:           MIT
+license-file:      LICENSE
+author:            Rehno Lindeque <code@rehno.lindeque.name>
+maintainer:        Rehno Lindeque <code@rehno.lindeque.name>
+copyright:         2015 CircuitHub, Inc.
+cabal-version:     >= 1.10
+build-type:        Simple
+
+flag dev
+    description:   Turn on development settings
+    default:       False
+
+library
+    exposed-modules: Data.Access
+                   , Data.Access.Unsafe
+
+    if flag(dev)
+        ghc-options:   -Wall -O0 -j
+    else
+        ghc-options:   -Wall -O2
+
+    default-language: Haskell2010
+
+    build-depends: base                          >= 4.7           && < 5
