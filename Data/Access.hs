@@ -11,11 +11,11 @@ module Data.Access
 
   -- Re-exports
     Access.AuthorizedIf
+  , Private.Private
   , Private.Private'
   , Private.private
   , Private.reveal
   -- Exports
-  , Private      -- has additional documentation to the type defined Data.Private
   , Authorized
   , AuthorizedIf'
   , Authorized'
@@ -119,35 +119,6 @@ import qualified Data.Private       as Private (Private, Private', private,
 
 -- ** Simple access policies
 
--- | A secret value that is "difficult to reveal", meaning that it should only ever be exposed if a suitable value witness is supplied for the type denoted as the guard.
---
---   * If a 'Private' is improperly accessed, then the associated safety contract will have been broken.
---
---   * If an improperly constructed guard witness is constructed the contract will also have been broken.
---
---   For example, one way of violating the type-safety of this mechanism would be to use 'unsafeCoerce' to coerce either the "Private" type or the associated guard (so please don't do this!).
---   Passing ⊥ (bottom) as a witness to the guard will lead to undefined behaviour.
---
---   Often 'Private' will be used with an 'Authorized' type as the guard. E.g.
---
--- @
---     lookupAdminOnlyResource :: path -> Private (Authorized Admin) Resource
--- @
---
---   If an operation has undesirable side effects (e.g. 'IO') then the side effect can also be hidden.
---
--- @
---     generateAdminOnlyResource :: path -> Private (Authorized Admin) (IO Resource)
--- @
---
---   Alternatively,
---
--- @
---     adminOnlyOperation :: Private (Authorized Admin) (path -> IO ())
--- @
---
-type Private guard secret = Private.Private guard secret
-
 -- | Read this as "Authorized for whoever obtains this value".
 -- A simple authorized value can be easily revealed by anyone (by simply supplying the '()' witness value),
 -- but should only be constructed by authorization code (probably inside your router).
@@ -177,10 +148,37 @@ authorize witness = Private.private . Private.reveal witness
 
 -- ** More sophisticated access policies
 
--- | Hides a private value by requiring authorization
+-- | A secret value that requrires authorization to reveal.
+--
+--   Often 'Private' will be used with an 'Authorized' type as the guard. E.g.
+--
+-- @
+--     lookupAdminOnlyResource :: path -> Private (Authorized Admin) Resource
+-- @
+--
+--   If an operation has undesirable side effects (e.g. 'IO') then the side effect can also be hidden.
+--
+-- @
+--     generateAdminOnlyResource :: path -> Private (Authorized Admin) (IO Resource)
+-- @
+--
+--   Alternatively,
+--
+-- @
+--     adminOnlyOperation :: Private (Authorized Admin) (path -> IO ())
+-- @
+--
+--   'Confidential' provides a type synonym in order to make this use case idiomatic:
+--
+-- @
+--     lookupAdminOnlyResource :: path -> Confidential Admin Resource
+--     generateAdminOnlyResource :: path -> Confidential Admin (IO Resource)
+--     adminOnlyOperation :: Confidential Admin (path -> IO ())
+-- @
+--
 type Confidential requiredCredential secret = Private.Private (Authorized requiredCredential) secret
 
--- | A simpler, more permissive confidential value that is protected by 'Authorized'' as the guard
+-- | A simpler, more permissive confidential value that is protected by 'Authorized'' instead of 'Authorized' as the guard
 type Confidential' secret = Private.Private Authorized' secret
 
 -- | Predicates one authorization on another authorization
