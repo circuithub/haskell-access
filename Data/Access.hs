@@ -26,6 +26,7 @@ module Data.Access
   , Authorization
   , Authorization'
   , authorizeErr
+  , revealFor
   ) where
 
 import qualified Data.Access.Unsafe as Access (AuthorizedIf)
@@ -189,7 +190,12 @@ type Authorization e credential = Either e (Authorized credential)
 type Authorization' e = Either e Authorized'
 
 -- | Authorize a credential only if we have 'Just' the witness (similar to 'readErr','justErr',etc functions from 'Control.Error.Safe')
-authorizeErr :: e -> Maybe guard -> Access.AuthorizedIf guard a -> Authorization e a
+authorizeErr :: e -> Maybe guard -> Access.AuthorizedIf guard credential -> Authorization e credential
 authorizeErr e Nothing _           = Left e
 authorizeErr _ (Just witness) auth = Right (authorize witness auth)
+
+-- | Reveal only for a valid authorization, the result is @Nothing@ otherwise
+revealFor :: Authorization e credential -> Confidential credential secret -> Maybe secret
+revealFor (Left _)     _ = Nothing
+revealFor (Right auth) p = Just (Private.reveal auth p)
 
