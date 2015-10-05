@@ -23,6 +23,6 @@ newtype Authority credential = Authority (Proxy credential)
 type AuthorizedIf guard credential = Private guard (Authority credential)
 
 -- | Construct a credential. Use with care!
-assumeAuthorized :: AuthorizedIf guard (Authority credential)
+assumeAuthorized :: AuthorizedIf guard credential
 assumeAuthorized = private (Authority Proxy)
 
