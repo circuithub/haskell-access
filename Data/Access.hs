@@ -11,11 +11,11 @@ module Data.Access
 
   -- Re-exports
     Access.AuthorizedIf
+  , Private.Private'
   , Private.private
   , Private.reveal
   -- Exports
   , Private      -- has additional documentation to the type defined Data.Private
-  , Private'
   , Authorized
   , AuthorizedIf'
   , Authorized'
@@ -28,7 +28,8 @@ module Data.Access
   ) where
 
 import qualified Data.Access.Unsafe as Access (AuthorizedIf)
-import qualified Data.Private       as Private (Private, private, reveal)
+import qualified Data.Private       as Private (Private, Private', private,
+                                                reveal)
 
 -- $guidelines
 --
@@ -145,10 +146,6 @@ import qualified Data.Private       as Private (Private, private, reveal)
 -- @
 --
 type Private guard secret = Private.Private guard secret
-
--- | A secret that is easily revealed for use in situations where the data being protected is not very sensitive.
---   'Private'' can be used to prevent accidentally defining serialization instances (e.g. Show, ToJSON) on slightly sensitive data etc.
-type Private' secret = Private () secret
 
 -- | Read this as "Authorized for whoever obtains this value".
 -- A simple authorized value can be easily revealed by anyone (by simply supplying the '()' witness value),

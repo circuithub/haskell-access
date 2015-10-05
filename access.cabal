@@ -20,6 +20,7 @@ flag dev
 
 library
     exposed-modules: Data.Private
+                   , Data.Private.Unsafe
                    , Data.Access
                    , Data.Access.Unsafe
 
