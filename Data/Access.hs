@@ -20,7 +20,8 @@ module Data.Access
   , AuthorizedIf'
   , Authorized'
   , authorize
-  , PrivateFor
+  , Confidential
+  , Confidential'
   , AuthorizedFor
   , Authorization
   , Authorization'
@@ -46,23 +47,23 @@ import qualified Data.Private       as Private (Private, Private', private,
 -- ** Privildege and/or Confidentiality
 --
 -- >           Authorized ("Difficult to construct")
--- >           +  --
--- >                  --
--- >           ↑          --
--- >           |              --
--- >           |                  --
--- >         P |                      --
--- >         R |                          --        AuthorizedIf
--- >         I |                              --  +
--- >         V |                                  |
--- >         I |
--- >         L |                                  |
--- >         E |
--- >         D |                                  |
--- >         G |
--- >         E |                                  |
+-- >           +
+-- >
+-- >           ↑
 -- >           |
--- >           |                                  |
+-- >           |
+-- >         P |
+-- >         R |
+-- >         I |
+-- >         V |
+-- >         I |
+-- >         L |
+-- >         E |
+-- >         D |
+-- >         G |
+-- >         E |
+-- >           |
+-- >           |
 -- >           |
 -- >            -------------------------------→  +
 -- >              C O N F I D E N T I A L I T Y     Private
@@ -93,7 +94,7 @@ import qualified Data.Private       as Private (Private, Private', private,
 -- >           |                                  |         \
 -- >           |
 -- >            -------------------------------→  +  --  --  -+
--- >              C O N F I D E N T I A L I T Y     Private     PrivateFor ("Requires priviledge/authorization to reveal")
+-- >              C O N F I D E N T I A L I T Y     Private     Confidential ("Requires priviledge/authorization to reveal")
 -- >
 --
 -- ** Using Data.Access with Yesod
@@ -160,7 +161,6 @@ type AuthorizedIf' guard = Access.AuthorizedIf guard ()
 -- | An extremely simple and permissive authorization that can be used in situations where fine-grained control is not really a requirement.
 type Authorized' = Authorized ()
 
-
 -- TODO: Perhaps use TypeSynonymInstances to implement these?
 --
 -- instance Show a => Show (AuthorizedIf () a) where
@@ -178,7 +178,10 @@ authorize witness = Private.private . Private.reveal witness
 -- ** More sophisticated access policies
 
 -- | Hides a private value by requiring authorization
-type PrivateFor requiredCredential secret = Private.Private (Authorized requiredCredential) secret
+type Confidential requiredCredential secret = Private.Private (Authorized requiredCredential) secret
+
+-- | A simpler, more permissive confidential value that is protected by 'Authorized'' as the guard
+type Confidential' secret = Private.Private Authorized' secret
 
 -- | Predicates one authorization on another authorization
 type AuthorizedFor requiredCredential credential = Access.AuthorizedIf (Authorized requiredCredential) credential
