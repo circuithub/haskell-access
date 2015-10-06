@@ -113,9 +113,27 @@ import qualified Data.Private       as Private (Private, Private', private,
 -- >   import qualified Yesod.Core  as Yesod (AuthResult (Authorized, Unauthorized))
 -- >
 -- >   -- | Convert authorization to a Yesod auth result
--- >   toYesodAuth :: Authorization Text a -> Yesod.AuthResult
+-- >   toYesodAuth :: Authorization Text credential -> Yesod.AuthResult
 -- >   toYesodAuth (Left e) = Yesod.Unauthorized e
 -- >   toYesodAuth (Right x) = x `seq` Yesod.Authorized
+--
+-- >   module Data.Access.Yesod.Unsafe
+-- >     ( fromYesodAuth
+-- >     ) where
+-- >
+-- >   import           Prelude            (seq)
+-- >
+-- >   import           Data.Access
+-- >   import qualified Data.Access.Unsafe as Unsafe
+-- >   import           Data.Either        (Either (..))
+-- >   import           Data.Text          (Text)
+-- >   import qualified Yesod.Core         as Yesod (AuthResult (..))
+-- >
+-- >   -- | Convert from a Yesod auth result to an authorization
+-- >   fromYesodAuth :: Yesod.AuthResult -> Authorization Text credential
+-- >   fromYesodAuth Yesod.Authorized = Right Unsafe.assumeAuthorized
+-- >   fromYesodAuth (Yesod.Unauthorized msg) = Left msg
+-- >   fromYesodAuth Yesod.AuthenticationRequired = Left "Authentication required"
 --
 
 -- ** Simple access policies
