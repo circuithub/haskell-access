@@ -45,12 +45,13 @@ import qualified Data.Private       as Private (Private, Private', private,
 -- This probably does not need to be said, but, of course, this package is in not intended to be robust against an adversary with access to the source code.
 -- There are many escape hatches in Haskell that you can use to circumvent the guarantees provided by this package (notably 'unsafeCoerce').
 --
--- ** Privildege and/or Confidentiality
+-- ** Privilege and/or Confidentiality
 --
 -- >           Authorized ("Difficult to construct")
 -- >           +
 -- >
 -- >           ↑
+-- >           |
 -- >           |
 -- >           |
 -- >         P |
@@ -60,7 +61,6 @@ import qualified Data.Private       as Private (Private, Private', private,
 -- >         I |
 -- >         L |
 -- >         E |
--- >         D |
 -- >         G |
 -- >         E |
 -- >           |
@@ -70,7 +70,7 @@ import qualified Data.Private       as Private (Private, Private', private,
 -- >              C O N F I D E N T I A L I T Y     Private
 -- >                                                ("Difficult to reveal")
 --
--- 'Authorized' annotates values with priviledges that need to be mindfully allotted.
+-- 'Authorized' annotates values with privileges that need to be mindfully allotted.
 -- 'Private' annotates values that need to be carefully revealed.
 --
 -- Since 'AuthorizedIf' builds on 'Private', we can go a little bit further using a slightly dubious understanding of the graphic above:
@@ -81,21 +81,21 @@ import qualified Data.Private       as Private (Private, Private', private,
 -- >           ↑          --
 -- >           |              --
 -- >           |                  --
--- >         P |                      --
--- >         R |                          --        AuthorizedIf ("Can only use authority if a condition is met")
--- >         I |                              --  +-
--- >         V |                                  | \--
--- >         I |                                        --
--- >         L |                                  |   \    --
--- >         E |                                              +   AuthorizedFor ("Depends on another priviledge/authorization")
--- >         D |                                  |     \
+-- >           |                      --
+-- >         P |                          --        AuthorizedIf ("Can only use authority if a condition is met")
+-- >         R |                              --  +-
+-- >         I |                                  | \--
+-- >         V |                                        --
+-- >         I |                                  |   \    --
+-- >         L |                                              +   AuthorizedFor ("Depends on another privilege/authorization")
+-- >         E |                                  |     \
 -- >         G |
 -- >         E |                                  |       \
 -- >           |
 -- >           |                                  |         \
 -- >           |
 -- >            -------------------------------→  +  --  --  -+
--- >              C O N F I D E N T I A L I T Y     Private     Confidential ("Requires priviledge/authorization to reveal")
+-- >              C O N F I D E N T I A L I T Y     Private     Confidential ("Requires privilege/authorization to reveal")
 -- >
 --
 -- ** Using Data.Access with Yesod
