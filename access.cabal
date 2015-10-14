@@ -1,5 +1,5 @@
 name:              access
-version:           0.1.0
+version:           0.1.1
 synopsis:          A simple representation for type-safe access control.
 description:       This package exposes a simple, type-safe scheme for specifying
                    authorization requirements on resources.
