@@ -1,5 +1,6 @@
 {-# LANGUAGE ExistentialQuantification #-}
 {-# LANGUAGE RankNTypes                #-}
+{-# LANGUAGE Safe                      #-}
 -- |
 -- Module:      Data.Access
 --
@@ -106,10 +107,10 @@ import qualified Data.Private       as Private (Private, Private', private,
 -- >     ( toYesodAuth
 -- >     ) where
 -- >
+-- >   import           Prelude     (seq)
 -- >   import           Data.Access
 -- >   import           Data.Either (Either (..))
 -- >   import           Data.Text   (Text)
--- >   import           Prelude     (seq)
 -- >   import qualified Yesod.Core  as Yesod (AuthResult (Authorized, Unauthorized))
 -- >
 -- >   -- | Convert authorization to a Yesod auth result
@@ -120,8 +121,6 @@ import qualified Data.Private       as Private (Private, Private', private,
 -- >   module Data.Access.Yesod.Unsafe
 -- >     ( fromYesodAuth
 -- >     ) where
--- >
--- >   import           Prelude            (seq)
 -- >
 -- >   import           Data.Access
 -- >   import qualified Data.Access.Unsafe as Unsafe

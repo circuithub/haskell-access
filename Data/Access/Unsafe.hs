@@ -1,4 +1,5 @@
 {-# OPTIONS_HADDOCK not-home #-}
+{-# LANGUAGE Safe      #-}
 -- |
 -- Module:      Data.Access.Unsafe
 --
