@@ -22,6 +22,7 @@ module Data.Access
   , AuthorizedIf'
   , Authorized'
   , authorize
+  , diminish
   , Confidential
   , Confidential'
   , AuthorizedFor
@@ -32,6 +33,7 @@ module Data.Access
   ) where
 
 import qualified Data.Access.Unsafe as Access (AuthorizedIf)
+import qualified Data.Access.Unsafe as Unsafe (assumeAuthorized)
 import qualified Data.Private       as Private (Private, Private', private,
                                                 reveal)
 
@@ -164,6 +166,12 @@ type Authorized' = Authorized ()
 --   @AuthorizedIf ()@ is denoted, simply, as 'Authorized', since '()' can be supplied at any time.
 authorize :: guard -> Access.AuthorizedIf guard credential -> Authorized credential
 authorize witness = Private.private . Private.reveal witness
+
+-- | Diminish the credential provided by an authorization to '()' in order to use it in a less confined setting
+--   (Unit dentotes a credential with less specification)
+diminish :: Authorized credential -> Authorized'
+diminish x = authorize x authorizedUnit
+  where authorizedUnit = Unsafe.assumeAuthorized :: AuthorizedFor credential ()
 
 -- ** More sophisticated access policies
 
