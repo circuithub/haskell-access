@@ -1,5 +1,6 @@
 {-# OPTIONS_HADDOCK not-home #-}
-{-# LANGUAGE Safe #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE Safe              #-}
 -- |
 -- Module:      Data.Private.Unsafe
 --
@@ -12,6 +13,10 @@ module Data.Private.Unsafe
   , unPrivate -- Unsafe!
   ) where
 
+import           Control.Applicative
+import           Control.Monad
+import           Data.Function       ((.))
+
 -- | A secret value that is "difficult to reveal", meaning that it should only ever be exposed if a suitable value witness is supplied for the type denoted as the guard.
 --
 --   * If a 'Private' is improperly accessed, then the associated safety contract will have been broken.
@@ -22,8 +27,13 @@ module Data.Private.Unsafe
 --   Passing ⊥ (bottom) as a witness to the guard will lead to undefined behaviour.
 newtype Private guard secret = Private secret
 
--- instance Functor Private where
---   fmap f (Private x) = Private (f x)
+instance Functor (Private guard) where
+  fmap f = private . f . unPrivate
+instance Applicative (Private guard) where
+  pure = private
+  pf <*> px = fmap (unPrivate pf) px
+instance Monad (Private guard) where
+  p >>= f = f (unPrivate p)
 -- instance Show a => Show (Private a) where
 --   show _ = "Private { ... }"
 -- instance Read a => Read (Private a) where

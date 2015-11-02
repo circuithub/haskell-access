@@ -1,4 +1,5 @@
-{-# LANGUAGE Safe #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE Safe              #-}
 -- |
 -- Module:      Data.Private
 --
@@ -9,13 +10,14 @@ module Data.Private
   , reveal
   ) where
 
+import           Prelude             (seq)
+
 import qualified Data.Private.Unsafe as Private (Private, private)
 import qualified Data.Private.Unsafe as Unsafe (unPrivate)
 
-import           Prelude             (seq)
-
 -- | A secret that is easily revealed for use in situations where the data being protected is not very sensitive.
 --   'Private'' can be used to prevent accidentally defining serialization instances (e.g. Show, ToJSON) on slightly sensitive data etc.
+--   Private corresponds to restricted form of Tagged
 type Private' secret = Private.Private () secret
 
 -- | Unwrap a private value by supplying a (non-bottom) witness value for the type that guards the secret.
