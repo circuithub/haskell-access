@@ -13,8 +13,7 @@ module Data.Private.Unsafe
   , unPrivate -- Unsafe!
   ) where
 
-import           Control.Applicative
-import           Control.Monad
+import           Prelude
 import           Data.Function       ((.))
 
 -- | A secret value that is "difficult to reveal", meaning that it should only ever be exposed if a suitable value witness is supplied for the type denoted as the guard.
@@ -26,6 +25,7 @@ import           Data.Function       ((.))
 --   For example, one way of violating the type-safety of this mechanism would be to use 'unsafeCoerce' to coerce either the "Private" type or the associated guard (so please don't do this!).
 --   Passing ⊥ (bottom) as a witness to the guard will lead to undefined behaviour.
 newtype Private guard secret = Private secret
+  deriving ( Eq, Ord )
 
 instance Functor (Private guard) where
   fmap f = private . f . unPrivate
