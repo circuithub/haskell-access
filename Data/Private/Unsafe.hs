@@ -41,7 +41,7 @@ instance Monad (Private guard) where
 
 -- | Construct a 'Private' value
 private :: secret -> Private guard secret
-private secret = Private secret
+private = Private
 
 -- | Unwrap a private value without supplying a witness value. This circumvents the confidentiality of 'Private', so use with care!
 unPrivate :: Private guard secret -> secret
